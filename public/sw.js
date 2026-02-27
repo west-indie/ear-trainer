@@ -1,5 +1,11 @@
 const CACHE_NAME = "VI-V-i-trainer-shell-v1";
-const APP_SHELL = ["/", "/index.html", "/manifest.webmanifest", "/vite.svg"];
+const BASE_PATH = "/ear-trainer/";
+const APP_SHELL = [
+  BASE_PATH,
+  `${BASE_PATH}index.html`,
+  `${BASE_PATH}manifest.webmanifest`,
+  `${BASE_PATH}vite.svg`,
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
