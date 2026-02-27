@@ -1,0 +1,9 @@
+{
+  "name": "VI-V-i Trainer",
+  "short_name": "VI-V-i",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffaf1",
+  "theme_color": "#fffaf1",
+  "description": "A tonic-centered ear training app with guided practice, authored drill overlays, and local-first backups."
+}
