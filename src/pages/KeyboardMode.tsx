@@ -305,6 +305,10 @@ export default function KeyboardMode() {
   const sungMidi = liveFrame.midi == null ? null : Math.round(liveFrame.midi);
   const sungMidiInRange = sungMidi != null && sungMidi >= keyboardStartMidi && sungMidi <= keyboardEndMidi ? sungMidi : null;
   const sungNoteSummary = sungMidi == null ? "Waiting for stable pitch" : displayMidiLabel(sungMidi, settings.keyboardAccidentalStyle);
+  const sungOverlayNote = sungMidi == null ? "--" : displayNoteName(midiToNoteName(sungMidi).name, settings.keyboardAccidentalStyle);
+  const sungOverlayCents = sungMidi == null || liveFrame.cents == null ? null : Math.round(liveFrame.cents);
+  const sungOverlaySharp = sungOverlayCents != null && sungOverlayCents > 0 ? `+${sungOverlayCents}` : null;
+  const sungOverlayFlat = sungOverlayCents != null && sungOverlayCents < 0 ? `${sungOverlayCents}` : null;
   const sungPitchStatus = !micEnabled
     ? "Microphone off"
     : sungMidi == null
@@ -844,6 +848,46 @@ export default function KeyboardMode() {
           </div>
         </div>
       </section>
+
+      <button
+        type="button"
+        className={micEnabled ? "keyboard-mic-overlay keyboard-mic-overlay--active" : "keyboard-mic-overlay"}
+        onClick={() => void (micEnabled ? disableMic() : enableMic())}
+        aria-label={micEnabled ? "Disable microphone tracking" : "Enable microphone tracking"}
+      >
+        {micEnabled ? (
+          <>
+            <span className="keyboard-mic-overlay__header">Mic</span>
+            <span className="keyboard-mic-overlay__cents keyboard-mic-overlay__cents--up">
+              {sungOverlaySharp ?? "\u00A0"}
+            </span>
+            <span className="keyboard-mic-overlay__note">{sungOverlayNote}</span>
+            <span className="keyboard-mic-overlay__cents keyboard-mic-overlay__cents--down">
+              {sungOverlayFlat ?? "\u00A0"}
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="keyboard-mic-overlay__header">Mic</span>
+            <span className="keyboard-mic-overlay__enable">Enable mic</span>
+          </>
+        )}
+      </button>
+      <div className="keyboard-notes-overlay" aria-hidden="true">
+        <span className="keyboard-notes-overlay__header">Notes</span>
+        <span className="keyboard-notes-overlay__value">
+          {sortedActiveMidis.length > 0
+            ? sortedActiveMidis
+              .map((midi) => displayNoteName(midiToNoteName(midi).name, settings.keyboardAccidentalStyle))
+              .join(" - ")
+            : "Press notes"}
+        </span>
+        <span className="keyboard-notes-overlay__meta">
+          {intervalPairs.length > 0
+            ? intervalPairs.map((pair) => pair.intervalLabel).join(" | ")
+            : "Intervals"}
+        </span>
+      </div>
     </div>
   );
 }

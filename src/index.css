@@ -1362,6 +1362,14 @@ p {
     grid-template-columns: minmax(0, 240px);
     min-width: min(100%, 240px);
   }
+
+  .keyboard-mic-overlay {
+    display: grid;
+  }
+
+  .keyboard-notes-overlay {
+    display: grid;
+  }
 }
 
 .keyboard-stage {
@@ -1467,6 +1475,107 @@ p {
   font-size: 0.74rem;
   opacity: 0.75;
   text-transform: uppercase;
+}
+
+.keyboard-mic-overlay {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 35;
+  display: none;
+  justify-items: center;
+  gap: 0.08rem;
+  min-width: 5.4rem;
+  padding: 0.55rem 0.7rem 0.6rem;
+  border: 1px solid rgba(17, 17, 17, 0.18);
+  background:
+    linear-gradient(90deg, var(--accent-red) 0 0.22rem, transparent 0.22rem 100%),
+    linear-gradient(180deg, var(--accent-blue) 0 0.18rem, transparent 0.18rem 100%),
+    var(--paper-strong);
+  box-shadow: var(--shadow-soft);
+  color: var(--ink);
+}
+
+.keyboard-mic-overlay--active {
+  background:
+    linear-gradient(90deg, var(--accent-blue) 0 0.22rem, transparent 0.22rem 100%),
+    linear-gradient(180deg, var(--accent-red) 0 0.18rem, transparent 0.18rem 100%),
+    var(--paper-strong);
+}
+
+.keyboard-mic-overlay__header {
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.keyboard-mic-overlay__note {
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 0.95;
+}
+
+.keyboard-mic-overlay__cents {
+  min-height: 0.95rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.keyboard-mic-overlay__cents--up {
+  color: var(--accent-red);
+}
+
+.keyboard-mic-overlay__cents--down {
+  color: var(--accent-blue);
+}
+
+.keyboard-mic-overlay__enable {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.keyboard-notes-overlay {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 35;
+  display: none;
+  gap: 0.12rem;
+  width: min(44vw, 10.5rem);
+  min-height: 5.4rem;
+  padding: 0.55rem 0.7rem 0.6rem;
+  border: 1px solid rgba(17, 17, 17, 0.18);
+  background:
+    linear-gradient(90deg, var(--accent-red) 0 0.22rem, transparent 0.22rem 100%),
+    linear-gradient(180deg, var(--accent-blue) 0 0.18rem, transparent 0.18rem 100%),
+    var(--paper-strong);
+  box-shadow: var(--shadow-soft);
+  color: var(--ink);
+  text-align: left;
+}
+
+.keyboard-notes-overlay__header {
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.keyboard-notes-overlay__value {
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.keyboard-notes-overlay__meta {
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: rgba(17, 17, 17, 0.72);
 }
 
 .bauhaus-composition {
