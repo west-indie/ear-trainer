@@ -1362,14 +1362,6 @@ p {
     grid-template-columns: minmax(0, 240px);
     min-width: min(100%, 240px);
   }
-
-  .keyboard-mic-overlay {
-    display: grid;
-  }
-
-  .keyboard-notes-overlay {
-    display: grid;
-  }
 }
 
 .keyboard-stage {
@@ -1576,6 +1568,13 @@ p {
   font-weight: 700;
   line-height: 1.2;
   color: rgba(17, 17, 17, 0.72);
+}
+
+@media (max-width: 900px) {
+  .keyboard-mic-overlay,
+  .keyboard-notes-overlay {
+    display: grid;
+  }
 }
 
 .bauhaus-composition {
