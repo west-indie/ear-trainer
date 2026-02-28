@@ -1,5 +1,5 @@
 const CACHE_NAME = "VI-V-i-trainer-shell-v2";
-const BASE_PATH = "/ear-trainer/";
+const BASE_PATH = new URL(self.registration.scope).pathname;
 const APP_SHELL = [
   BASE_PATH,
   `${BASE_PATH}index.html`,

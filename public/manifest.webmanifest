@@ -1,7 +1,7 @@
 {
   "name": "VI-V-i Trainer",
   "short_name": "VI-V-i",
-  "start_url": "/ear-trainer/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#fffaf1",
   "theme_color": "#fffaf1",
