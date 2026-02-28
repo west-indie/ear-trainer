@@ -259,11 +259,12 @@ export default function KeyboardMode() {
   const [micEnabled, setMicEnabled] = useState(false);
   const [micError, setMicError] = useState<string | null>(null);
   const [liveFrame, setLiveFrame] = useState<PitchFrame>(EMPTY_FRAME);
+  const [micNoiseGate, setMicNoiseGate] = useState(() => Math.max(0.001, getVoiceSettings().noiseGate / 4));
   const contextRef = useRef<AudioContext | null>(null);
   const masterRef = useRef<GainNode | null>(null);
   const voiceRef = useRef(new Map<number, VoiceNodes>());
   const activeSourcesRef = useRef(new Map<number, Set<string>>());
-  const glissandoRef = useRef<{ pointerId: number; sourceId: string; midi: number } | null>(null);
+  const pointerSourcesRef = useRef(new Map<number, { sourceId: string; midi: number }>());
   const detectorContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
@@ -271,6 +272,7 @@ export default function KeyboardMode() {
   const frameBufferRef = useRef<Float32Array<ArrayBuffer> | null>(null);
   const micRafRef = useRef<number | null>(null);
   const lastMicUiTickRef = useRef(0);
+  const micNoiseGateRef = useRef(micNoiseGate);
 
   const sortedActiveMidis = useMemo(() => [...activeMidis].sort((a, b) => a - b), [activeMidis]);
   const shortcutEntries = useMemo(
@@ -315,6 +317,9 @@ export default function KeyboardMode() {
     : `Clarity ${Math.round(liveFrame.clarity * 100)}% | Level ${liveFrame.rms.toFixed(3)}`;
 
   useEffect(() => subscribeSettings(() => setSettings(getSettings())), []);
+  useEffect(() => {
+    micNoiseGateRef.current = micNoiseGate;
+  }, [micNoiseGate]);
 
   useEffect(() => {
     if (masterRef.current) {
@@ -330,8 +335,8 @@ export default function KeyboardMode() {
       releaseAllNotes();
     };
 
-    const onPointerUp = () => {
-      releaseGlissando();
+    const onPointerUp = (event: PointerEvent) => {
+      releasePointerSource(event.pointerId);
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -445,8 +450,6 @@ export default function KeyboardMode() {
       source.connect(analyser);
 
       const buffer = new Float32Array(new ArrayBuffer(analyser.fftSize * Float32Array.BYTES_PER_ELEMENT));
-      const voiceSettings = getVoiceSettings();
-
       detectorContextRef.current = context;
       analyserRef.current = analyser;
       sourceRef.current = source;
@@ -463,7 +466,7 @@ export default function KeyboardMode() {
         if (!analyserNode || !detectorContext || !frameBuffer) return;
 
         analyserNode.getFloatTimeDomainData(frameBuffer);
-        const frame = analyzePitchFrame(frameBuffer, detectorContext.sampleRate, voiceSettings.noiseGate);
+        const frame = analyzePitchFrame(frameBuffer, detectorContext.sampleRate, micNoiseGateRef.current);
         const now = performance.now();
 
         if (now - lastMicUiTickRef.current > 70) {
@@ -590,37 +593,37 @@ export default function KeyboardMode() {
     Array.from(activeSourcesRef.current.entries()).forEach(([midi, sources]) => {
       Array.from(sources).forEach((sourceId) => releaseNote(midi, sourceId));
     });
-    glissandoRef.current = null;
+    pointerSourcesRef.current.clear();
   }
 
-  function beginGlissando(pointerId: number, midi: number) {
+  function beginPointerSource(pointerId: number, midi: number) {
     const sourceId = `ptr:${pointerId}`;
-    glissandoRef.current = { pointerId, sourceId, midi };
+    const current = pointerSourcesRef.current.get(pointerId);
+    if (current && current.midi !== midi) {
+      releaseNote(current.midi, current.sourceId);
+    }
+    pointerSourcesRef.current.set(pointerId, { sourceId, midi });
     void pressNote(midi, sourceId);
   }
 
-  function moveGlissando(pointerId: number, midi: number) {
-    const glissando = glissandoRef.current;
-    if (!glissando || glissando.pointerId !== pointerId || glissando.midi === midi) {
+  function movePointerSource(pointerId: number, midi: number) {
+    const current = pointerSourcesRef.current.get(pointerId);
+    if (!current || current.midi === midi) {
       return;
     }
 
-    releaseNote(glissando.midi, glissando.sourceId);
-    glissandoRef.current = { ...glissando, midi };
-    void pressNote(midi, glissando.sourceId);
+    releaseNote(current.midi, current.sourceId);
+    pointerSourcesRef.current.set(pointerId, { sourceId: current.sourceId, midi });
+    void pressNote(midi, current.sourceId);
   }
 
-  function releaseGlissando(pointerId?: number) {
-    const glissando = glissandoRef.current;
-    if (!glissando) {
+  function releasePointerSource(pointerId: number) {
+    const current = pointerSourcesRef.current.get(pointerId);
+    if (!current) {
       return;
     }
-    if (pointerId != null && glissando.pointerId !== pointerId) {
-      return;
-    }
-
-    releaseNote(glissando.midi, glissando.sourceId);
-    glissandoRef.current = null;
+    releaseNote(current.midi, current.sourceId);
+    pointerSourcesRef.current.delete(pointerId);
   }
 
   return (
@@ -696,6 +699,18 @@ export default function KeyboardMode() {
             <div className="keyboard-analysis-card__value keyboard-analysis-card__value--large">{sungNoteSummary}</div>
             <div className="subtle">{sungPitchStatus}</div>
             <div className="subtle">{sungPitchMeta}</div>
+            <label className="control-label keyboard-analysis-card__slider">
+              <span>Mic sensitivity</span>
+              <input
+                type="range"
+                min={0.001}
+                max={0.02}
+                step={0.001}
+                value={micNoiseGate}
+                onChange={(event) => setMicNoiseGate(Number(event.target.value))}
+              />
+              <span className="subtle">Gate {micNoiseGate.toFixed(3)} | lower = more sensitive</span>
+            </label>
           </div>
         )}
         {audioError && <div className="notice notice--alert">{audioError}</div>}
@@ -759,14 +774,19 @@ export default function KeyboardMode() {
                     type="button"
                     className={className}
                     style={noteColor ? ({ "--keyboard-note-color": noteColor } as CSSProperties) : undefined}
-                    onPointerDown={(event) => beginGlissando(event.pointerId, key.midi)}
+                    onPointerDown={(event) => beginPointerSource(event.pointerId, key.midi)}
                     onPointerEnter={(event) => {
                       if (event.buttons > 0) {
-                        moveGlissando(event.pointerId, key.midi);
+                        movePointerSource(event.pointerId, key.midi);
                       }
                     }}
-                    onPointerUp={(event) => releaseGlissando(event.pointerId)}
-                    onPointerCancel={(event) => releaseGlissando(event.pointerId)}
+                    onPointerLeave={(event) => {
+                      if (event.buttons === 0) {
+                        releasePointerSource(event.pointerId);
+                      }
+                    }}
+                    onPointerUp={(event) => releasePointerSource(event.pointerId)}
+                    onPointerCancel={(event) => releasePointerSource(event.pointerId)}
                   >
                     <span className="keyboard-key__note">{displayNoteName(key.name, settings.keyboardAccidentalStyle)}{key.octave}</span>
                     <span className="keyboard-key__shortcut">
@@ -799,14 +819,19 @@ export default function KeyboardMode() {
                       left: `calc(${(key.whiteIndex / whiteKeys.length) * 100}% - 1.9rem)`,
                       ...(noteColor ? { "--keyboard-note-color": noteColor } : {}),
                     } as CSSProperties}
-                    onPointerDown={(event) => beginGlissando(event.pointerId, key.midi)}
+                    onPointerDown={(event) => beginPointerSource(event.pointerId, key.midi)}
                     onPointerEnter={(event) => {
                       if (event.buttons > 0) {
-                        moveGlissando(event.pointerId, key.midi);
+                        movePointerSource(event.pointerId, key.midi);
                       }
                     }}
-                    onPointerUp={(event) => releaseGlissando(event.pointerId)}
-                    onPointerCancel={(event) => releaseGlissando(event.pointerId)}
+                    onPointerLeave={(event) => {
+                      if (event.buttons === 0) {
+                        releasePointerSource(event.pointerId);
+                      }
+                    }}
+                    onPointerUp={(event) => releasePointerSource(event.pointerId)}
+                    onPointerCancel={(event) => releasePointerSource(event.pointerId)}
                   >
                     <span className="keyboard-key__note">{displayNoteName(key.name, settings.keyboardAccidentalStyle)}</span>
                     <span className="keyboard-key__shortcut">

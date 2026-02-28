@@ -233,6 +233,58 @@ p {
   justify-content: center;
 }
 
+.topnav__menu-button {
+  display: none;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+  padding-inline: 0.8rem;
+  background: #e7dbc2;
+}
+
+.topnav__settings-button {
+  position: relative;
+  min-width: 0;
+  padding: 0.7rem 1rem 0.7rem 1.25rem;
+  border-color: rgba(17, 17, 17, 0.16);
+  background:
+    linear-gradient(90deg, var(--accent-blue) 0 0.28rem, transparent 0.28rem 100%),
+    #e7dbc2;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.topnav__settings-button:hover {
+  background:
+    linear-gradient(90deg, var(--accent-red) 0 0.28rem, transparent 0.28rem 100%),
+    #fff5df;
+}
+
+.topnav__menu-mark {
+  display: inline-grid;
+  gap: 0.18rem;
+  width: 1.55rem;
+}
+
+.topnav__menu-bar {
+  display: block;
+  height: 0.28rem;
+}
+
+.topnav__menu-bar--red {
+  background: var(--accent-red);
+}
+
+.topnav__menu-bar--blue {
+  background: var(--accent-blue);
+}
+
+.topnav__menu-bar--yellow {
+  background: var(--accent-yellow);
+}
+
 .topnav__link {
   padding: 0.45rem 0.65rem;
   border: 1px solid transparent;
@@ -259,6 +311,7 @@ p {
 .topnav__actions {
   display: flex;
   justify-content: flex-end;
+  gap: 0.6rem;
 }
 
 .page {
@@ -1238,6 +1291,10 @@ p {
   margin-top: 0.1rem;
 }
 
+.keyboard-analysis-card__slider {
+  margin-top: 0.45rem;
+}
+
 .keyboard-interval-list {
   display: flex;
   gap: 0.7rem;
@@ -1526,13 +1583,45 @@ p {
 
 @media (max-width: 900px) {
   .topnav {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
+    gap: 0.8rem;
   }
 
-  .topnav__nav,
   .topnav__actions {
+    justify-content: flex-end;
+    align-items: start;
+    flex-wrap: wrap;
+  }
+
+  .topnav__brand {
+    min-width: 0;
+  }
+
+  .topnav__status {
+    display: none;
+  }
+
+  .topnav__menu-button {
+    display: inline-flex;
+  }
+
+  .topnav__nav {
+    display: none;
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 0.85rem;
+    border: 1px solid rgba(17, 17, 17, 0.14);
+    background:
+      linear-gradient(135deg, rgba(223, 70, 56, 0.1) 0 18%, transparent 18% 100%),
+      linear-gradient(225deg, rgba(36, 93, 183, 0.1) 0 18%, transparent 18% 100%),
+      #e7dbc2;
     justify-content: flex-start;
+  }
+
+  .topnav__nav--open {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .page-header--hero {
@@ -1552,5 +1641,36 @@ p {
 
   .page-title {
     max-width: 100%;
+  }
+
+  .topnav {
+    padding: 0.85rem;
+  }
+
+  .topnav__eyebrow {
+    font-size: 0.63rem;
+    letter-spacing: 0.16em;
+  }
+
+  .topnav__title {
+    font-size: 1.3rem;
+  }
+
+  .topnav__actions {
+    gap: 0.45rem;
+  }
+
+  .topnav__actions > button {
+    min-height: 40px;
+    padding: 0.58rem 0.72rem;
+  }
+
+  .topnav__settings-button {
+    padding-left: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .topnav__nav--open {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
