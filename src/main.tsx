@@ -6,7 +6,19 @@ import "./index.css";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    void navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`);
+    const baseUrl = new URL(import.meta.env.BASE_URL, window.location.origin).href;
+    const serviceWorkerUrl = `${import.meta.env.BASE_URL}sw.js`;
+
+    void navigator.serviceWorker.getRegistrations().then((registrations) =>
+      Promise.all(
+        registrations.map((registration) => {
+          if (registration.scope === baseUrl) return Promise.resolve(false);
+          return registration.unregister();
+        }),
+      ),
+    );
+
+    void navigator.serviceWorker.register(serviceWorkerUrl);
   });
 }
 

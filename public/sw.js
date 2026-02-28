@@ -1,4 +1,4 @@
-const CACHE_NAME = "VI-V-i-trainer-shell-v1";
+const CACHE_NAME = "VI-V-i-trainer-shell-v2";
 const BASE_PATH = "/ear-trainer/";
 const APP_SHELL = [
   BASE_PATH,
