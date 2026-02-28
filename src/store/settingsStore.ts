@@ -34,7 +34,15 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export function getSettings(): AppSettings {
-  return readLocal<AppSettings>(KEY, DEFAULT_SETTINGS);
+  const stored = readLocal<Partial<AppSettings>>(KEY, DEFAULT_SETTINGS);
+  return {
+    ...DEFAULT_SETTINGS,
+    ...stored,
+    range: {
+      ...DEFAULT_SETTINGS.range,
+      ...(stored.range ?? {}),
+    },
+  };
 }
 
 export function setSettings(next: AppSettings) {
