@@ -24,10 +24,10 @@ export const QUICKPLAY_TOPIC_OPTIONS: Array<{ mode: TrainingMode; title: string 
 ];
 
 export const QUICKPLAY_INTERVAL_LEVEL_COPY: Record<1 | 2 | 3 | 4, string> = {
-  1: "Level 1: seconds only, focused on adjacent degree movement.",
-  2: "Level 2: adds 3rds.",
-  3: "Level 3: adds P4 and P5.",
-  4: "Level 4: adds octave movement.",
+  1: "Level 1: seconds only.",
+  2: "Level 2: add 3rds.",
+  3: "Level 3: add 4ths and 5ths.",
+  4: "Level 4: add octaves.",
 };
 
 export const QUICKPLAY_TONIC_SOURCE_COPY: Record<QuickplayTonicSourceLevel, string> = {

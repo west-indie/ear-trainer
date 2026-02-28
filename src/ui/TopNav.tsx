@@ -19,6 +19,7 @@ export default function TopNav({ onOpenSettings }: { onOpenSettings: () => void 
       <div className="topnav__nav">
         <NavLink to="/" className={({ isActive }) => isActive ? "topnav__link topnav__link--active" : "topnav__link"}>Home</NavLink>
         <NavLink to="/practice" className={({ isActive }) => isActive ? "topnav__link topnav__link--active" : "topnav__link"}>Practice</NavLink>
+        <NavLink to="/keyboard" className={({ isActive }) => isActive ? "topnav__link topnav__link--active" : "topnav__link"}>Keyboard</NavLink>
         <NavLink to="/voice" className={({ isActive }) => isActive ? "topnav__link topnav__link--active" : "topnav__link"}>Voice</NavLink>
         <NavLink to="/beginner" className={({ isActive }) => isActive ? "topnav__link topnav__link--active" : "topnav__link"}>Basics</NavLink>
         <NavLink to="/progress" className={({ isActive }) => isActive ? "topnav__link topnav__link--active" : "topnav__link"}>Progress</NavLink>

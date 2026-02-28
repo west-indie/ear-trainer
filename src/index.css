@@ -480,6 +480,33 @@ p {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
+.quickplay-control-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.quickplay-control-grid select {
+  min-height: 40px;
+  padding: 0.62rem 0.78rem;
+}
+
+.quickplay-control-grid__description {
+  grid-column: 1 / -1;
+  margin-top: -0.1rem;
+}
+
+@media (max-width: 780px) {
+  .quickplay-control-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .quickplay-control-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .control-group {
   display: grid;
   gap: 0.45rem;
@@ -1122,6 +1149,269 @@ p {
   border-color: rgba(17, 17, 17, 0.2);
 }
 
+.keyboard-mode-page {
+  gap: 1.2rem;
+}
+
+.keyboard-analysis-panel {
+  gap: 1rem;
+  background: #b8ada0;
+}
+
+.keyboard-analysis-panel::before {
+  background: var(--accent-red);
+}
+
+.keyboard-analysis-line {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.keyboard-analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.keyboard-analysis__mic-button {
+  min-width: 150px;
+  background: var(--panel-fill);
+}
+
+.keyboard-analysis-value {
+  font-size: clamp(1.7rem, 4vw, 3rem);
+  font-family: "Bahnschrift", "Century Gothic", sans-serif;
+  line-height: 1;
+}
+
+.keyboard-analysis-notes {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.keyboard-note-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.45rem 0.8rem;
+  border: 2px solid var(--keyboard-note-color);
+  background: color-mix(in srgb, var(--keyboard-note-color) 18%, #fffaf0);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.keyboard-note-pill__text {
+  color: var(--keyboard-note-color);
+}
+
+.keyboard-analysis-grid {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.keyboard-analysis-card {
+  display: grid;
+  gap: 0.3rem;
+  min-height: 96px;
+  background: #b8ada0;
+  border-left-color: var(--accent-red);
+}
+
+.keyboard-analysis-card__value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.keyboard-analysis-card__value--large {
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  line-height: 1;
+}
+
+.keyboard-analysis-card--mic {
+  margin-top: 0.1rem;
+}
+
+.keyboard-interval-list {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.keyboard-interval-item {
+  display: inline-flex;
+  gap: 0.18rem;
+  align-items: center;
+}
+
+.keyboard-interval-note {
+  color: var(--keyboard-note-color);
+}
+
+.keyboard-interval-separator {
+  color: rgba(17, 17, 17, 0.55);
+}
+
+.keyboard-surface {
+  gap: 1.2rem;
+  background: var(--paper-strong);
+}
+
+.keyboard-surface::before {
+  width: 0.22rem;
+  height: 100%;
+  background: var(--accent-blue);
+}
+
+.keyboard-surface__kicker {
+  margin-bottom: 0.35rem;
+}
+
+.keyboard-surface__title {
+  color: var(--ink);
+}
+
+.keyboard-surface__controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 240px));
+  gap: 0.45rem;
+  justify-items: end;
+  min-width: min(100%, 496px);
+}
+
+.keyboard-surface__mapping {
+  width: min(100%, 240px);
+}
+
+.keyboard-surface__copy {
+  max-width: 240px;
+  text-align: right;
+}
+
+.keyboard-shell {
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+}
+
+@media (max-width: 900px) {
+  .keyboard-surface__controls {
+    grid-template-columns: minmax(0, 240px);
+    min-width: min(100%, 240px);
+  }
+}
+
+.keyboard-stage {
+  position: relative;
+  min-width: 940px;
+  padding: 1rem;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.08)),
+    var(--paper-strong);
+}
+
+.keyboard-whites {
+  display: grid;
+  grid-template-columns: repeat(21, minmax(0, 1fr));
+  gap: 0.2rem;
+}
+
+.keyboard-blacks {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  height: 0;
+}
+
+.keyboard-key {
+  user-select: none;
+}
+
+.keyboard-key--white {
+  position: relative;
+  display: grid;
+  align-content: end;
+  justify-items: center;
+  min-height: 320px;
+  padding: 1rem 0.3rem 0.8rem;
+  border: 1px solid rgba(17, 17, 17, 0.2);
+  background: linear-gradient(180deg, #fffdf8 0%, #efe2c4 100%);
+  box-shadow: inset 0 -10px 0 rgba(17, 17, 17, 0.06);
+}
+
+.keyboard-key--black {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  align-content: end;
+  justify-items: center;
+  width: 3.8rem;
+  min-height: 196px;
+  padding: 0.7rem 0.2rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, #3b342f 0%, #080707 100%);
+  color: #f6ecda;
+}
+
+.keyboard-key--active {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--keyboard-note-color, #efc133) 78%, white) 0%,
+    var(--keyboard-note-color, #df8e2a) 100%
+  );
+  border-color: color-mix(in srgb, var(--keyboard-note-color, #df8e2a) 72%, #111111);
+  color: #111111;
+  box-shadow: inset 0 -10px 0 rgba(17, 17, 17, 0.14);
+}
+
+.keyboard-key--mic-active {
+  box-shadow:
+    inset 0 0 0 3px rgba(36, 93, 183, 0.72),
+    inset 0 -10px 0 rgba(17, 17, 17, 0.14);
+}
+
+.keyboard-key--black.keyboard-key--mic-active {
+  box-shadow:
+    inset 0 0 0 3px rgba(239, 193, 51, 0.9),
+    0 0 0 1px rgba(17, 17, 17, 0.3);
+}
+
+.keyboard-key--middle-c::before {
+  content: "Middle C";
+  position: absolute;
+  top: 13.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.18rem 0.45rem;
+  background: var(--accent-red);
+  color: #f7f0de;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+.keyboard-key__note {
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.keyboard-key__shortcut {
+  font-size: 0.74rem;
+  opacity: 0.75;
+  text-transform: uppercase;
+}
+
 .bauhaus-composition {
   display: none;
 }
@@ -1248,6 +1538,7 @@ p {
   .page-header--hero {
     grid-template-columns: 1fr;
   }
+
 }
 
 @media (max-width: 720px) {

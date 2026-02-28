@@ -8,6 +8,7 @@ import ProgressPage from "../pages/ProgressPage";
 import Debug from "../pages/Debug";
 import VoicePractice from "../pages/VoicePractice";
 import StudioPage from "../pages/StudioPage";
+import KeyboardMode from "../pages/KeyboardMode";
 
 export const routes: RouteObject[] = [
   { path: "/", element: <Home /> },
@@ -18,5 +19,6 @@ export const routes: RouteObject[] = [
   { path: "/progress", element: <ProgressPage /> },
   { path: "/studio", element: <StudioPage /> },
   { path: "/voice", element: <VoicePractice /> },
+  { path: "/keyboard", element: <KeyboardMode /> },
   { path: "/debug", element: <Debug /> },
 ];

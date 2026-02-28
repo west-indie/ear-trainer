@@ -1,6 +1,8 @@
 import { readLocal, writeLocal } from "./storage";
 
 export type Timbre = "sine" | "triangle" | "square" | "sawtooth";
+export type KeyboardMiddleCMapping = "B" | "W";
+export type KeyboardAccidentalStyle = "flat" | "sharp";
 
 export type AppSettings = {
   keyRoot: "C" | "Db" | "D" | "Eb" | "E" | "F" | "Gb" | "G" | "Ab" | "A" | "Bb" | "B";
@@ -8,6 +10,8 @@ export type AppSettings = {
   tempoBpm: number;
   masterGain: number;          // 0..1
   timbre: Timbre;
+  keyboardMiddleCMapping: KeyboardMiddleCMapping;
+  keyboardAccidentalStyle: KeyboardAccidentalStyle;
   droneEnabled: boolean;
   visualsEnabled: boolean;
   range: { lowMidi: number; highMidi: number }; // for future singing/range constraints
@@ -22,6 +26,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   tempoBpm: 90,
   masterGain: 0.25,
   timbre: "triangle",
+  keyboardMiddleCMapping: "B",
+  keyboardAccidentalStyle: "flat",
   droneEnabled: false,
   visualsEnabled: true,
   range: { lowMidi: 48, highMidi: 72 }, // C3..C5

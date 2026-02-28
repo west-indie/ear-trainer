@@ -27,6 +27,10 @@ export default function Home() {
   const [quickplayFixedPoolRoot, setQuickplayFixedPoolRoot] = useState<NoteName>("C");
   const [quickplayIntervalLevel, setQuickplayIntervalLevel] = useState<1 | 2 | 3 | 4>(1);
   const [quickplayDegreeLevel, setQuickplayDegreeLevel] = useState<1 | 2 | 3>(1);
+  const intervalTopicSelected = quickplayTopics.includes("functional_interval");
+  const degreeTopicSelected = quickplayTopics.includes("scale_degree");
+  const tonicSelectionDisabled = quickplayTonicSourceLevel === 3;
+  const tonicSelectionLabel = quickplayTonicSourceLevel === 2 ? "Fixed pool" : "Fixed tonic";
 
   function toggleQuickplayTopic(mode: TrainingMode) {
     setQuickplayTopics((current) => {
@@ -81,7 +85,7 @@ export default function Home() {
                 Start here
               </button>
               <div className="hero-cta__label">Click Here to enter keyboard mode</div>
-              <button type="button" className="hero-cta__button">
+              <button type="button" className="hero-cta__button" onClick={() => navigate("/keyboard")}>
                 Keyboard mode
               </button>
             </div>
@@ -151,7 +155,7 @@ export default function Home() {
             <div id="quickplay-overlay-title" className="panel-title">Quickplay</div>
             <div className="subtle">Set the few options that should override the quickplay preset, then start immediately.</div>
 
-            <div className="control-grid">
+            <div className="control-grid quickplay-control-grid">
               <label className="control-label">Tonic source
                 <select
                   value={quickplayTonicSourceLevel}
@@ -161,45 +165,53 @@ export default function Home() {
                   <option value={2}>Level 2: Fixed pool</option>
                   <option value={3}>Level 3: Fully randomized</option>
                 </select>
-                <div className="subtle">{QUICKPLAY_TONIC_SOURCE_COPY[quickplayTonicSourceLevel]}</div>
               </label>
-              <label className={quickplayTonicSourceLevel === 1 ? "control-label" : "control-label control-label--disabled"}>Fixed tonic
+              <label className={tonicSelectionDisabled ? "control-label control-label--disabled" : "control-label"}>{tonicSelectionLabel}
                 <select
-                  value={quickplayFixedTonic}
-                  disabled={quickplayTonicSourceLevel !== 1}
-                  onChange={(event) => setQuickplayFixedTonic(event.target.value as NoteName)}
+                  value={quickplayTonicSourceLevel === 2 ? quickplayFixedPoolRoot : quickplayFixedTonic}
+                  disabled={tonicSelectionDisabled}
+                  onChange={(event) => {
+                    const value = event.target.value as NoteName;
+                    if (quickplayTonicSourceLevel === 2) {
+                      setQuickplayFixedPoolRoot(value);
+                      return;
+                    }
+                    setQuickplayFixedTonic(value);
+                  }}
                 >
-                  {NOTE_NAMES.map((note) => (
-                    <option key={note} value={note}>{note}</option>
-                  ))}
+                  {quickplayTonicSourceLevel === 2
+                    ? quickplayPoolOptions().map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))
+                    : NOTE_NAMES.map((note) => (
+                      <option key={note} value={note}>{note}</option>
+                    ))}
                 </select>
               </label>
-              <label className={quickplayTonicSourceLevel === 2 ? "control-label" : "control-label control-label--disabled"}>Fixed pool
+              <label className={intervalTopicSelected ? "control-label" : "control-label control-label--disabled"}>Interval level
                 <select
-                  value={quickplayFixedPoolRoot}
-                  disabled={quickplayTonicSourceLevel !== 2}
-                  onChange={(event) => setQuickplayFixedPoolRoot(event.target.value as NoteName)}
+                  value={quickplayIntervalLevel}
+                  disabled={!intervalTopicSelected}
+                  onChange={(event) => setQuickplayIntervalLevel(Number(event.target.value) as 1 | 2 | 3 | 4)}
                 >
-                  {quickplayPoolOptions().map((option) => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                  ))}
-                </select>
-              </label>
-              <label className="control-label">Interval level
-                <select value={quickplayIntervalLevel} onChange={(event) => setQuickplayIntervalLevel(Number(event.target.value) as 1 | 2 | 3 | 4)}>
                   <option value={1}>{QUICKPLAY_INTERVAL_LEVEL_COPY[1]}</option>
                   <option value={2}>{QUICKPLAY_INTERVAL_LEVEL_COPY[2]}</option>
                   <option value={3}>{QUICKPLAY_INTERVAL_LEVEL_COPY[3]}</option>
                   <option value={4}>{QUICKPLAY_INTERVAL_LEVEL_COPY[4]}</option>
                 </select>
               </label>
-              <label className="control-label">Degree level
-                <select value={quickplayDegreeLevel} onChange={(event) => setQuickplayDegreeLevel(Number(event.target.value) as 1 | 2 | 3)}>
+              <label className={degreeTopicSelected ? "control-label" : "control-label control-label--disabled"}>Degree level
+                <select
+                  value={quickplayDegreeLevel}
+                  disabled={!degreeTopicSelected}
+                  onChange={(event) => setQuickplayDegreeLevel(Number(event.target.value) as 1 | 2 | 3)}
+                >
                   <option value={1}>1-5</option>
                   <option value={2}>+6/7</option>
                   <option value={3}>+b3/#4/b7</option>
                 </select>
               </label>
+              <div className="subtle quickplay-control-grid__description">{QUICKPLAY_TONIC_SOURCE_COPY[quickplayTonicSourceLevel]}</div>
             </div>
 
             <div className="control-group">

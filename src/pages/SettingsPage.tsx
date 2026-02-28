@@ -18,14 +18,14 @@ import { getAuthoredDrills, subscribeAuthoredDrills } from "../store/contentStor
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState(getProfile());
-  const [settings, setSettings] = useState(getSettings());
+  const [settings, setCurrentSettings] = useState(getSettings());
   const [draftName, setDraftName] = useState(getProfile().displayName);
   const [authoredCount, setAuthoredCount] = useState(getAuthoredDrills().length);
   const [status, setStatus] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => subscribeProfile(() => setProfile(getProfile())), []);
-  useEffect(() => subscribeSettings(() => setSettings(getSettings())), []);
+  useEffect(() => subscribeSettings(() => setCurrentSettings(getSettings())), []);
   useEffect(() => subscribeAuthoredDrills(() => setAuthoredCount(getAuthoredDrills().length)), []);
 
   async function runSync(direction: "push" | "pull") {
