@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+    <script>
+      const firstSegment = window.location.pathname.split("/").filter(Boolean)[0] ?? "";
+      const basePath = firstSegment ? `/${firstSegment}/` : "/";
+      const path = window.location.pathname.startsWith(basePath)
+        ? window.location.pathname.slice(basePath.length)
+        : "";
+      const search = window.location.search || "";
+      const hash = window.location.hash || "";
+      const target = `${basePath}?/${path}${search.replace(/^\?/, "&")}${hash}`;
+      window.location.replace(target);
+    </script>
+  </head>
+  <body></body>
+</html>

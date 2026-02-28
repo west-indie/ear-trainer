@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        const redirect = window.location.search.match(/^\?\/(.*)$/);
+        if (!redirect) return;
+
+        const [pathWithQuery = ""] = redirect.slice(1);
+        const [pathname = "", query = ""] = pathWithQuery.split("&");
+        const nextUrl = `${window.location.pathname}${pathname}${query ? `?${query}` : ""}${window.location.hash}`;
+        window.history.replaceState(null, "", nextUrl);
+      })();
+    </script>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#fffaf1" />
+    <link rel="icon" type="image/svg+xml" href="vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basic Trainer</title>
+    <script type="module" crossorigin src="/ear-trainer/assets/index-BXna5DHz.js"></script>
+    <link rel="stylesheet" crossorigin href="/ear-trainer/assets/index-Bp57AWG2.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
